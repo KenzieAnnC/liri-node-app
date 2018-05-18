@@ -17,19 +17,21 @@ var client = new Twitter(keys.twitter);
 var myTwitter = 996482349847203841;
 
 
-// client.get('statuses/user_timeline', {user_id: myTwitter}, function(error, tweets, response) {
+// client.get('statuses/user_timeline', {follow: myTwitter}, function(error, tweets, response) {
 //   if(error) throw error; 
 //   console.log(JSON.stringify(tweets, null, 2)); 
 // });
 
 
-var params = { id: myTwitter, count: 20 };
+var params = { follow: myTwitter, count: 20 };
 client.get('statuses/user_timeline/', params, function (error, tweets, response) {
   if (!error) {
     for (var i = 0; i < tweets.length; i++) {
       tweets[i].text
       console.log(tweets[i].text);
     }
+  } else {
+    throw error;
   }
 });
 

@@ -10,7 +10,7 @@ var Spotify = require('node-spotify-api');
 
 // User input vars //
 var command = process.argv[2];
-var value = process.argv.slice(3);
+var userValue = process.argv.slice(3);
 
 
 // creating spotify and twitter variables
@@ -20,20 +20,20 @@ var client = new Twitter(keys.twitter);
 //////////////////////////////////////////////////////////
 //                     input logic                      //
 //////////////////////////////////////////////////////////
-run(command, value);
+run(command, userValue);
 
-function run(command, value) {
+function run(command, userValue) {
   switch (command) {
     case 'my-tweets':
       getTweets();
       break;
 
     case "spotify-this-song":
-      getSong(value);
+      getSong(userValue);
       break;
 
     case "movie-this":
-      getMovie(value);
+      getMovie(userValue);
       break;
 
     default:
@@ -74,15 +74,15 @@ function getTweets() {
 /////////////////////////////////////////////////////////////
 //                         SPOTIFY                        //
 ////////////////////////////////////////////////////////////
-function getSong(value) {
+function getSong(userValue) {
 
-  if (!value) {
-  
-    value = "The+Sign+Ace+of+Base";
+  if (!userValue) {
+
+    userValue = "The+Sign+Ace+of+Base";
   }
   var songArtists = [];
 
-  spotify.search({ type: "track", query: value, limit: 1 }, function (err, data) {
+  spotify.search({ type: "track", query: userValue, limit: 1 }, function (err, data) {
     if (err) {
       console.log(err);
     }
@@ -118,8 +118,12 @@ function getSong(value) {
 /////////////////////////////////////////////////////////////
 //                         OMDB                            //
 ////////////////////////////////////////////////////////////
-function getMovie(value) {
-  var queryUrl = "http://www.omdbapi.com/?t=" + value + "&y=&plot=short&apikey=trilogy";
+function getMovie(userValue) {
+
+  if (!userValue) {
+    userValue = "Mr+Nobody";
+  }
+  var queryUrl = "http://www.omdbapi.com/?t=" + userValue + "&y=&plot=short&apikey=trilogy";
 
   request(queryUrl, function (error, response, body) {
     // if there is no error, console movie info
@@ -128,7 +132,7 @@ function getMovie(value) {
       // parsing the response into an object //
       console.log("Title: " + JSON.parse(body).Title);
       console.log("Release Year: " + JSON.parse(body).Year);
-      console.log("IMDB Rating: " + JSON.parse(body).Ratings[0].Value);
+      console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
       console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
       console.log("Country: " + JSON.parse(body).Country);
       console.log("Language: " + JSON.parse(body).Language);

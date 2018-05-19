@@ -10,13 +10,36 @@ var Spotify = require('node-spotify-api');
 
 // User input vars //
 var command = process.argv[2];
-var value = process.argv[3];
+var value = process.argv.slice(3);
 
 
 // creating spotify and twitter variables
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
+//////////////////////////////////////////////////////////
+//                     input logic                      //
+//////////////////////////////////////////////////////////
+run(command, value);
+
+function run(command, value) {
+  switch (command) {
+    case 'my-tweets':
+      getTweets();
+      break;
+
+    case "spotify-this-song":
+      getSong(value);
+      break;
+
+    case "movie-this":
+      getMovie(value);
+      break;
+
+    default:
+      break;
+  }
+}
 
 
 //////////////////////////////////////////////////////////
@@ -52,6 +75,11 @@ function getTweets() {
 //                         SPOTIFY                        //
 ////////////////////////////////////////////////////////////
 function getSong(value) {
+
+  if (!value) {
+  
+    value = "The+Sign+Ace+of+Base";
+  }
   var songArtists = [];
 
   spotify.search({ type: "track", query: value, limit: 1 }, function (err, data) {

@@ -35,6 +35,9 @@ function run(command, value) {
     case "movie-this":
       getMovie(value);
       break;
+    case "do-what-it-says":
+      getRandom();
+      break;
 
     default:
       break;
@@ -145,4 +148,22 @@ function getMovie(movie) {
       console.log('\n');
     }
   })
+}
+
+/////////////////////////////////////////////////////////////
+//                     read text file                      //
+////////////////////////////////////////////////////////////
+
+function getRandom() {
+  fs.readFile("random.txt", "utf8", function (error, data) {
+    console.log(data);
+    var dataArr = data.split(',')
+
+    if (dataArr.length == 2) {
+      run(dataArr[0], dataArr[1]);
+    } else if (dataArr.length == 1) {
+      run(dataArr[0]);
+    }
+
+  });
 }

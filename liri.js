@@ -10,7 +10,7 @@ var Spotify = require('node-spotify-api');
 
 // User input vars //
 var command = process.argv[2];
-var userValue = process.argv.slice(3);
+var value = process.argv.slice(3);
 
 
 // creating spotify and twitter variables
@@ -20,20 +20,20 @@ var client = new Twitter(keys.twitter);
 //////////////////////////////////////////////////////////
 //                     input logic                      //
 //////////////////////////////////////////////////////////
-run(command, userValue);
+run(command, value);
 
-function run(command, userValue) {
+function run(command, value) {
   switch (command) {
     case 'my-tweets':
       getTweets();
       break;
 
     case "spotify-this-song":
-      getSong(userValue);
+      getSong(value);
       break;
 
     case "movie-this":
-      getMovie(userValue);
+      getMovie(value);
       break;
 
     default:
@@ -74,15 +74,16 @@ function getTweets() {
 /////////////////////////////////////////////////////////////
 //                         SPOTIFY                        //
 ////////////////////////////////////////////////////////////
-function getSong(userValue) {
+function getSong(song) {
 
-  if (!userValue) {
-
-    userValue = "The+Sign+Ace+of+Base";
+  // default to 'The Sign' if user inputs nothing
+  if (song == '') {
+    song = "The+Sign+Ace+of+Base";
   }
+
   var songArtists = [];
 
-  spotify.search({ type: "track", query: userValue, limit: 1 }, function (err, data) {
+  spotify.search({ type: "track", query: song, limit: 1 }, function (err, data) {
     if (err) {
       console.log(err);
     }
@@ -118,12 +119,13 @@ function getSong(userValue) {
 /////////////////////////////////////////////////////////////
 //                         OMDB                            //
 ////////////////////////////////////////////////////////////
-function getMovie(userValue) {
+function getMovie(movie) {
 
-  if (!userValue) {
-    userValue = "Mr+Nobody";
+  if (movie == '') {
+    movie = 'Mr Nobody';
   }
-  var queryUrl = "http://www.omdbapi.com/?t=" + userValue + "&y=&plot=short&apikey=trilogy";
+
+  var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
 
   request(queryUrl, function (error, response, body) {
     // if there is no error, console movie info
